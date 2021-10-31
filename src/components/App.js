@@ -1,14 +1,43 @@
+import React from 'react';
 import Header from './Header';
 import Main from './Main';
 import Footer from './Footer';
+import PopupWithForm from './PopupWithForm';
+import api from '../utils/Api';
 
 function App() {
+
+  const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = React.useState(false);
+  const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = React.useState(false);
+  const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = React.useState(false);
+
+  function handleEditAvatarClick() {
+    setIsEditAvatarPopupOpen(true)
+  }
+
+  function handleEditProfileClick() {
+    setIsEditProfilePopupOpen(true)
+  }
+
+  function handleAddPlaceClick() {
+    setIsAddPlacePopupOpen(true)
+  }
+
+  function closeAllPopups() {
+    setIsEditAvatarPopupOpen(false);
+    setIsEditProfilePopupOpen(false);
+    setIsAddPlacePopupOpen(false);
+  }
+
   return (
     <div className="App">
       <div className="page">
         <div className="page__container">
           <Header />
-          <Main />
+          <Main
+            onEditAvatar={handleEditAvatarClick}
+            onEditProfile={handleEditProfileClick}
+            onAddPlace={handleAddPlaceClick}/>
           <Footer />
 
           <div className="popup popup_function_watch-photo">
@@ -22,13 +51,12 @@ function App() {
             <figcaption className="popup__caption">Подпись изображения</figcaption></figure>
           </div>
 
-          <div className="popup popup_function_edit-profile">
-            <button type="button" className="popup__close"></button>
-            <form
-              className="popup__form popup__form_edit"
-              name="profile"
-              noValidate>
-              <h2 className="popup__title">Редактировать профиль</h2>
+          <PopupWithForm
+            name="edit-profile"
+            title="Редактировать профиль"
+            button="Сохранить"
+            isOpen={isEditProfilePopupOpen}
+            onClose={closeAllPopups}>
               <input
                 type="text"
                 className="popup__input"
@@ -47,20 +75,14 @@ function App() {
                 maxLength="200"
                 required/>
                 <span className="popup__error job-input-error"></span>
-              <button
-                className="popup__button popup__edit-submit"
-                type="submit">Сохранить
-              </button>
-            </form>
-          </div>
+          </PopupWithForm>
 
-          <div className="popup popup_function_add-place">
-            <button type="button" className="popup__close"></button>
-            <form
-              className="popup__form popup__form_add"
-              name="add-place"
-              noValidate>
-              <h2 className="popup__title">Новое место</h2>
+          <PopupWithForm
+            name="add-place"
+            title="Новое место"
+            button="Создать"
+            isOpen={isAddPlacePopupOpen}
+            onClose={closeAllPopups}>
               <input
                 type="text"
                 className="popup__input"
@@ -78,34 +100,20 @@ function App() {
                 name="link"
                 id="link-input" required/>
                 <span className="popup__error link-input-error"></span>
-              <button
-                className="popup__button popup__add-submit"
-                type="submit">Создать
-              </button>
-            </form>
-          </div>
+          </PopupWithForm>
 
-          <div className="popup popup_function_remove-card">
-            <button type="button" className="popup__close"></button>
-            <form
-              className="popup__form popup__form_remove"
-              name="remove"
-              noValidate>
-              <h2 className="popup__title">Вы уверены?</h2>
-              <button
-                className="popup__button"
-                type="submit">Да
-              </button>
-            </form>
-          </div>
+          <PopupWithForm
+            name="remove-card"
+            title="Вы уверены?"
+            button="Да"
+            onClose={closeAllPopups}/>
 
-          <div className="popup popup_function_edit-avatar">
-            <button type="button" className="popup__close"></button>
-            <form
-              className="popup__form popup__form_avatar"
-              name="avatar"
-              noValidate>
-              <h2 className="popup__title">Обновить аватар</h2>
+          <PopupWithForm
+            name="edit-avatar"
+            title="Обновить аватар"
+            button="Сохранить"
+            isOpen={isEditAvatarPopupOpen}
+            onClose={closeAllPopups}>
               <input
                 type="url"
                 className="popup__input"
@@ -114,12 +122,7 @@ function App() {
                 id="avatar-input"
                 required/>
                 <span className="popup__error avatar-input-error"></span>
-              <button
-                className="popup__button popup__avatar-submit"
-                type="submit">Сохранить
-              </button>
-            </form>
-          </div>
+          </PopupWithForm>
         </div>
       </div>
     </div>

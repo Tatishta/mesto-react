@@ -1,36 +1,25 @@
 function PopupWithForm(props) {
 
-
   return (
-    <div className={`popup popup_function_${props.name}`}>
-      <button type="button" className="popup__close"></button>
+    <div
+      className={`popup popup_function_${props.name} ${props.isOpen ? 'popup_opened' : ''}`}>
+      <button
+        type="button"
+        className="popup__close"
+        onClick={props.onClose}></button>
       <form
-        className={`popup__form popup__form_${props.name}`}
-        name="add-place"
+        className="popup__form"
+        name={`${props.name}`}
         noValidate>
-        <h2 className="popup__title">Новое место</h2>
-        <input
-          type="text"
-          className="popup__input"
-          name="name"
-          placeholder="Название"
-          id="place-input"
-          minLength="2"
-          maxLength="30"
-          required/>
-        <span className="popup__error place-input-error"></span>
-        <input
-          type="url"
-          className="popup__input"
-          placeholder="Ссылка на картинку"
-          name="link"
-          id="link-input" required/>
-          <span className="popup__error link-input-error"></span>
+        <h2 className="popup__title">{props.title}</h2>
+        {props.children}
         <button
-          className="popup__button popup__add-submit"
-          type="submit">Создать
+          className={`popup__button popup__submit_${props.name}`}
+          type="submit">{props.button}
         </button>
       </form>
     </div>
   );
 }
+
+export default PopupWithForm;
