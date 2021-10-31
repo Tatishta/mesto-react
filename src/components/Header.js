@@ -1,10 +1,14 @@
+import React from 'react';
+import logo from '../images/logo.svg';
+
 function Header() {
   return (
     <header className="header">
-      <a
+      <img
         className="header__logo"
-        href="#">
-      </a>
+        src={logo}
+        alt="Логотип с названием приложения Место"
+      />
     </header>
   );
 }
