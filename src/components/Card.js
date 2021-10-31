@@ -2,6 +2,9 @@ import React from 'react';
 
 function Card(props) {
 
+  function handleClick() {
+    props.handleClick(props.card);
+  };
 
   return(
     <div id="card" key={props.card.key}>
@@ -9,7 +12,8 @@ function Card(props) {
         <img
           className="element__image"
           src={props.card.link}
-          alt={props.card.name}/>
+          alt={props.card.name}
+          onClick={handleClick}/>
         <button
           type="button"
           className="element__remove-button">

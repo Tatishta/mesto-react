@@ -3,29 +3,39 @@ import Header from './Header';
 import Main from './Main';
 import Footer from './Footer';
 import PopupWithForm from './PopupWithForm';
+import ImagePopup from './ImagePopup';
 
 function App() {
 
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = React.useState(false);
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = React.useState(false);
   const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = React.useState(false);
+  const [selectedCard, selectCard] = React.useState({});
+  const [isImagePopupOpen, setIsImagePopupOpen] = React.useState(false);
 
   function handleEditAvatarClick() {
-    setIsEditAvatarPopupOpen(true)
+    setIsEditAvatarPopupOpen(true);
   }
 
   function handleEditProfileClick() {
-    setIsEditProfilePopupOpen(true)
+    setIsEditProfilePopupOpen(true);
   }
 
   function handleAddPlaceClick() {
-    setIsAddPlacePopupOpen(true)
+    setIsAddPlacePopupOpen(true);
   }
+
+  function handleCardClick(card) {
+    setIsImagePopupOpen(true);
+    selectCard(card);
+  }
+
 
   function closeAllPopups() {
     setIsEditAvatarPopupOpen(false);
     setIsEditProfilePopupOpen(false);
     setIsAddPlacePopupOpen(false);
+    setIsImagePopupOpen(false);
   }
 
   return (
@@ -36,19 +46,14 @@ function App() {
           <Main
             onEditAvatar={handleEditAvatarClick}
             onEditProfile={handleEditProfileClick}
-            onAddPlace={handleAddPlaceClick}/>
+            onAddPlace={handleAddPlaceClick}
+            onCardClick={handleCardClick}/>
           <Footer />
 
-          <div className="popup popup_function_watch-photo">
-            <button type="button" className="popup__close">
-            </button>
-            <figure className="popup__figure">
-              <img
-              className="popup__image"
-              src='<%=require("./images/avatar.jpg")%>'
-              alt="Изображение пользователя"/>
-            <figcaption className="popup__caption">Подпись изображения</figcaption></figure>
-          </div>
+          <ImagePopup
+            card={selectedCard}
+            isOpen={isImagePopupOpen}
+            onClose={closeAllPopups}/>
 
           <PopupWithForm
             name="edit-profile"
