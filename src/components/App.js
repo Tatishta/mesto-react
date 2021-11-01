@@ -66,6 +66,7 @@ function App() {
                 className="popup__input"
                 name="person"
                 id="name-input"
+                placeholder="Имя"
                 minLength="2"
                 maxLength="40"
                 required/>
@@ -75,6 +76,7 @@ function App() {
                 className="popup__input"
                 name="job"
                 id="job-input"
+                placeholder="Описание профиля"
                 minLength="2"
                 maxLength="200"
                 required/>

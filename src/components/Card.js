@@ -7,7 +7,6 @@ function Card(props) {
   };
 
   return(
-    <div id="card" key={props.card.key}>
       <li className="element">
         <img
           className="element__image"
@@ -26,7 +25,6 @@ function Card(props) {
           <p className="element__like-counter">{props.card.likes.length}</p>
         </div>
       </li>
-    </div>
   );
 }
 
