@@ -5,6 +5,7 @@ import Footer from './Footer';
 import PopupWithForm from './PopupWithForm';
 import ImagePopup from './ImagePopup';
 import EditProfilePopup from './EditProfilePopup';
+import EditAvatarPopup from './EditAvatarPopup';
 
 import { newApi } from '../utils/Api';
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
@@ -16,17 +17,55 @@ function App() {
   const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = React.useState(false);
   const [selectedCard, selectCard] = React.useState({});
   const [isImagePopupOpen, setIsImagePopupOpen] = React.useState(false);
-
   const [currentUser, setCurrentUser] = React.useState({})
+
   React.useEffect(() => {
     newApi.getMyInfo()
     .then((res) => {
-      setCurrentUser(res);
+      setCurrentUser({
+        name: res.name,
+        about: res.about,
+        avatar: res.avatar,
+        _id: res._id
+      });
+      console.log(res)
     })
     .catch((err) => {
       console.log(err);
     })
-  });
+  }, []);
+
+  function handleUpdateUser(name, about) {
+    newApi.editUserInfo(name, about)
+    .then((res) => {
+      setCurrentUser({
+        name: res.name,
+        about: res.about,
+        avatar: res.avatar,
+        _id: res._id
+      });
+      closeAllPopups();
+    })
+    .catch((err) => {
+      console.log(err);
+    })
+  }
+
+  function handleUpdateAvatar(avatar) {
+    newApi.getNewAvatar(avatar)
+    .then((res) => {
+      setCurrentUser({
+        name: res.name,
+        about: res.about,
+        avatar: res.avatar,
+        _id: res._id
+      });
+      closeAllPopups();
+    })
+    .catch((err) => {
+      console.log(err);
+    })
+  }
 
   function handleEditAvatarClick() {
     setIsEditAvatarPopupOpen(true);
@@ -44,7 +83,6 @@ function App() {
     setIsImagePopupOpen(true);
     selectCard(card);
   }
-
 
   function closeAllPopups() {
     setIsEditAvatarPopupOpen(false);
@@ -73,7 +111,8 @@ function App() {
 
             <EditProfilePopup
               isOpen={isEditProfilePopupOpen}
-              onClose={closeAllPopups} />
+              onClose={closeAllPopups}
+              onUpdateUser={handleUpdateUser} />
 
             <PopupWithForm
               name="add-place"
@@ -106,21 +145,11 @@ function App() {
               button="Да"
               onClose={closeAllPopups}/>
 
-            <PopupWithForm
-              name="edit-avatar"
-              title="Обновить аватар"
-              button="Сохранить"
+            <EditAvatarPopup
               isOpen={isEditAvatarPopupOpen}
-              onClose={closeAllPopups}>
-                <input
-                  type="url"
-                  className="popup__input"
-                  placeholder="https://somewebsite.com/someimage.jpg"
-                  name="avatar"
-                  id="avatar-input"
-                  required/>
-                  <span className="popup__error avatar-input-error"></span>
-            </PopupWithForm>
+              onClose={closeAllPopups}
+              onUpdateAvatar={handleUpdateAvatar} />
+
           </div>
         </div>
       </CurrentUserContext.Provider>
