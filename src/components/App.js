@@ -2,11 +2,11 @@ import React from 'react';
 import Header from './Header';
 import Main from './Main';
 import Footer from './Footer';
-import PopupWithForm from './PopupWithForm';
 import ImagePopup from './ImagePopup';
 import EditProfilePopup from './EditProfilePopup';
 import EditAvatarPopup from './EditAvatarPopup';
 import AddPlacePopup from './AddPlacePopup';
+import DeletePopup from './DeletePopup';
 
 import { newApi } from '../utils/Api';
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
@@ -20,6 +20,7 @@ function App() {
   const [isImagePopupOpen, setIsImagePopupOpen] = React.useState(false);
   const [currentUser, setCurrentUser] = React.useState({})
   const [cards, setCards] = React.useState([]);
+  const [isDeletePopupOpen, setIsDeletePopupOpen] = React.useState(false);
 
   React.useEffect(() => {
     newApi.getInitialCards()
@@ -50,17 +51,22 @@ function App() {
   function handleCardLike(card) {
     const isLiked = card.likes.some(i => i._id === currentUser._id);
       newApi.stateLike(card._id, isLiked)
-
       .then((newCard) => {
         setCards((state) => state.map((c) => c._id === card._id ? newCard : c));
-    });
+      })
+      .catch((err) => {
+        console.log(err);
+      })
   }
 
   function handleCardDelete(card) {
     newApi.deleteCard(card._id)
-
     .then(() => {
-      setCards((state) => state.filter((c) => c._id !== card._id))
+      setCards((state) => state.filter((c) => c._id !== card._id));
+      closeAllPopups();
+    })
+    .catch((err) => {
+      console.log(err);
     })
   }
 
@@ -124,11 +130,17 @@ function App() {
     selectCard(card);
   }
 
+  function handleDeleteClick(card) {
+    setIsDeletePopupOpen(true);
+    selectCard(card);
+  }
+
   function closeAllPopups() {
     setIsEditAvatarPopupOpen(false);
     setIsEditProfilePopupOpen(false);
     setIsAddPlacePopupOpen(false);
     setIsImagePopupOpen(false);
+    setIsDeletePopupOpen(false);
   }
 
   return (
@@ -144,7 +156,7 @@ function App() {
               cards={cards}
               onCardClick={handleCardClick}
               onCardLike={handleCardLike}
-              onCardDelete={handleCardDelete}
+              onCardDelete={handleDeleteClick}
               />
             <Footer />
 
@@ -164,17 +176,18 @@ function App() {
               onAddPlace={handleAddPlace}
             />
 
-            <PopupWithForm
-              name="remove-card"
-              title="Вы уверены?"
-              button="Да"
-              onClose={closeAllPopups}/>
+            <DeletePopup
+              isOpen={isDeletePopupOpen}
+              onClose={closeAllPopups}
+              onDeleteCard={handleCardDelete}
+              card={selectedCard}
+            />
 
             <EditAvatarPopup
               isOpen={isEditAvatarPopupOpen}
               onClose={closeAllPopups}
-              onUpdateAvatar={handleUpdateAvatar} />
-
+              onUpdateAvatar={handleUpdateAvatar}
+            />
           </div>
         </div>
       </CurrentUserContext.Provider>
